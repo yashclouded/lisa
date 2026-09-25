@@ -1,0 +1,35 @@
+{
+  "name": "lisa-spectral-analyser",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "tsx scripts/run-all-tests.ts",
+    "test:lisa": "tsx scripts/test-lisa-samples.ts",
+    "validate:lisa": "tsx scripts/test-lisa-samples.ts",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "test:twin": "tsx scripts/verify-digital-twin.ts"
+  },
+  "dependencies": {
+    "lucide-react": "^1.48.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/three": "^0.180.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "oxlint": "^1.81.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.2",
+    "vite": "^6.4.3"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-arm64": "^1.2.11"
+  }
+}

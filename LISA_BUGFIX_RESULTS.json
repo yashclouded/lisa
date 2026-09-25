@@ -1,0 +1,128 @@
+{
+  "timestamp": "2026-09-26T02:13:00Z",
+  "agent": "Scientific / Backend / ML Fix Agent",
+  "status": "COMPLETED",
+  "bugs": {
+    "BUG-001": {
+      "title": "Analyte dispatch hardcoded to phosphate",
+      "severity": "P0",
+      "status": "FIXED",
+      "description": "executeLISAPipeline resolved analyte via hardcoded index 0. Selecting Iron, Fluoride, Nitrate, or Lead still executed the phosphate model.",
+      "fix": "Accept analyteId in PipelineExecutionOptions, validate against supported calibration models. Unsupported analytes immediately halt with status UNSUPPORTED_ANALYTE, isRejected: true, concentration: null, uncertainty: null, selectedModel: 'none'.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 1)"
+    },
+    "BUG-002": {
+      "title": "Device normalization is dead code",
+      "severity": "P0",
+      "status": "FIXED",
+      "description": "normalizeDeviceSpectrum existed in deviceCalibration.ts but was never invoked in executeLISAPipeline. Device calibration profiles had no mathematical effect.",
+      "fix": "Integrated normalizeDeviceSpectrum into the orchestrator pipeline prior to optical cross-correlation alignment. Calibrated devices now mathematically scale raw spectra by inverse spectral sensitivity.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 2)"
+    },
+    "BUG-003": {
+      "title": "Ridge CV has replicate/group leakage",
+      "severity": "P1",
+      "status": "FIXED",
+      "description": "Sample-level LOOCV on 21 standards (7 concentrations x 3 replicates) held out 1 replicate while leaving 2 identical concentrations in training, leaking ground-truth signal.",
+      "fix": "Implemented Leave-One-Concentration-Out cross-validation. In each of 7 folds, all 3 replicates of a concentration are held out. Grouped CV RMSE recomputed genuinely as 0.0481 mg/L (MAE: 0.0261 mg/L, R2: 0.9807).",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 3)"
+    },
+    "BUG-004": {
+      "title": "Uncertainty ignores sample-specific noise",
+      "severity": "P1",
+      "status": "FIXED",
+      "description": "Uncertainty was fixed to max(0.015, loocvRmse), giving noisy and pristine samples identical confidence intervals.",
+      "fix": "Implemented computeSampleSpectralResidual calculating sample-specific residual variance s_res^2 = sum((A_meas - A_recon)^2) / df and added sample variance in quadrature with CV error in concentration space.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 4)"
+    },
+    "BUG-005": {
+      "title": "Hard-coded scientific fallback metrics",
+      "severity": "P1",
+      "status": "FIXED",
+      "description": "Failure paths in wavelength.ts and beerLambert.ts returned hardcoded prototype metrics (R2=0.9995, R2=0.99, RMSE=0.02, LOD=0.05).",
+      "fix": "Removed all fabricated fallbacks. Insufficient standards or references (< 2 points) return isValid: false, explicit error codes, and r2: null, rmse: null, lod: null, loq: null.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 5)"
+    },
+    "BUG-006": {
+      "title": "Live camera capture falls back to simulator",
+      "severity": "P2",
+      "status": "FIXED",
+      "description": "Camera started MediaStream, but clicking Capture ran simulateSpectrum instead of extracting the video frame.",
+      "fix": "Implemented CameraAdapter.captureFrame and extractSpectrumFromVideo to draw HTMLVideoElement to offscreen canvas, detect ROI, and bin spatial transmission profile. Wired into AcquisitionPanel. Refuses simulator fallback in LIVE CAMERA mode.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 6)"
+    },
+    "BUG-007": {
+      "title": "Beer-Lambert / Ridge model comparison unit mismatch",
+      "severity": "P2",
+      "status": "FIXED",
+      "description": "Beer-Lambert calibration fit RMSE was measured in Absorbance Units (AU) but presented as mg/L, creating a dimensional mismatch against Ridge RMSE (mg/L).",
+      "fix": "Enforced dimensional consistency: Beer-Lambert calibration fit error is explicitly AU (rmseUnit: 'AU'); converted concentration-space prediction error is mg/L (concentrationRmse = rmse / slope); Ridge CV error is mg/L. ModelComparison updated accordingly.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 8)"
+    },
+    "BUG-009": {
+      "title": "History does not persist",
+      "severity": "P2",
+      "status": "FIXED",
+      "description": "History records were stored in React state only and lost upon page refresh.",
+      "fix": "Implemented historyStorage.ts using versioned localStorage key 'lisa.history.v1' with JSON corruption recovery and 50-record capping. Initialized on mount and synced in App.tsx.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 7)"
+    },
+    "BUG-010": {
+      "title": "ROI detector uses maximum variance row rather than centroid",
+      "severity": "P2",
+      "status": "FIXED",
+      "description": "Single max-variance row latched onto high-contrast cuvette edges rather than the dispersed spectral band center.",
+      "fix": "Replaced single max-variance row selection with computeVarianceCentroid: weighted center-of-mass of the top 20% variance rows.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 9)"
+    },
+    "BUG-011": {
+      "title": "Hard-coded diagnostics execution time",
+      "severity": "P3",
+      "status": "FIXED",
+      "description": "DiagnosticsModal displayed static '18.4 ms' before any pipeline run had occurred.",
+      "fix": "Replaced static metric with '—' when lastExecutionMs === 0, and measured latency after runs.",
+      "verifiedBy": "src/components/DiagnosticsModal.tsx"
+    },
+    "BUG-012": {
+      "title": "Mobile header overflow",
+      "severity": "P3",
+      "status": "FIXED",
+      "description": "Header toolbar buttons overflowed viewports narrower than 768px.",
+      "fix": "Coordinated with UI architecture: Header consolidated secondary actions into an accessible overflow menu dropdown, eliminating horizontal toolbar overflow.",
+      "verifiedBy": "src/components/Header.tsx"
+    },
+    "BENCHMARK-HONESTY": {
+      "title": "Simulated vs wet-lab benchmark labeling ambiguity",
+      "severity": "P3",
+      "status": "FIXED",
+      "description": "Benchtop concordance table in labBenchmark.ts could be mistaken for physical wet-lab trials.",
+      "fix": "Tagged all rows with provenance: 'SIMULATED'. Clarified headers and UI copy to 'Simulated reference standards'.",
+      "verifiedBy": "scripts/run-all-tests.ts (PHASE 12)"
+    }
+  },
+  "tests": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "goldenScenarios": "6/6 passed"
+  },
+  "metricsBefore": {
+    "ridgeCvRmse": "0.0193 mg/L (leaked replicate LOOCV)",
+    "beerFitR2Fallback": "0.99 (hardcoded prototype)",
+    "beerFitRmseFallback": "0.02 (hardcoded prototype)",
+    "wavelengthFitR2Fallback": "0.9995 (hardcoded prototype)",
+    "initialDiagnosticsLatency": "18.4 ms (hardcoded prototype)"
+  },
+  "metricsAfter": {
+    "ridgeGroupedCvRmse": "0.0481 mg/L (genuine Leave-One-Concentration-Out CV)",
+    "ridgeGroupedCvMae": "0.0261 mg/L",
+    "ridgeGroupedCvR2": "0.9807",
+    "beerFitR2": "0.9770",
+    "beerFitRmseAbsorbance": "0.0539 AU",
+    "beerFitConcentrationRmse": "0.0531 mg/L",
+    "beerLod": "0.1842 mg/L",
+    "beerLoq": "0.5583 mg/L",
+    "initialDiagnosticsLatency": "— (measured latency on run)"
+  },
+  "remainingIssues": []
+}

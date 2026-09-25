@@ -1,0 +1,1002 @@
+{
+  "metadata": {
+    "auditTitle": "LISA QA, Scientific Validation & Hackathon Readiness Audit",
+    "version": "1.0.0",
+    "timestamp": "2026-09-26T00:25:00+05:30",
+    "leadAuditor": "Senior Scientific Computing, ML & QA Reviewer",
+    "conversationId": "20d76e01-b7bb-411d-a79a-fb86444ffcb7"
+  },
+  "environment": {
+    "os": "macOS (Darwin arm64)",
+    "nodeVersion": "v22.11.0",
+    "npmVersion": "10.9.0",
+    "viteVersion": "6.4.3",
+    "reactVersion": "19.2.8",
+    "typescriptVersion": "6.0.2",
+    "gitBranch": "master",
+    "gitStatus": "working tree clean",
+    "buildCommand": "npm run build (tsc -b && vite build)",
+    "buildStatus": "PASS (0 errors, dist bundle: index.html 0.95 kB, CSS 8.16 kB, JS 356.14 kB)",
+    "lintCommand": "npm run lint (oxlint)",
+    "lintStatus": "FAIL (oxlint native binding missing on macOS arm64 in node_modules)"
+  },
+  "inventory": [
+    {
+      "component": "Vite + React 19 Frontend Shell",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Header & Command Toolbar",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "9-Stage Pipeline Visualizer",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Optical Simulator (LED + Analyte Molar Extinction)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Hardware Optical Degradation Sliders",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Beer-Lambert Absorbance Calculation Engine",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Baseline Correction Engine (Rolling Min & Offset-Zero)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Cross-Correlation Optical Alignment Engine",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Wavelength Calibration Engine (CFL Emission Lines)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PARTIAL"
+    },
+    {
+      "component": "Beer-Lambert Peak Band Model",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Full-Spectrum Ridge Regression (L2 Regularized)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Cross-Validation Model Selection Engine",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Uncertainty Estimation Engine",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PARTIAL"
+    },
+    {
+      "component": "Out-of-Distribution (OOD) Spectral Anomaly Engine",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Multi-Tier Quality Control (QC) Matrix",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Scientific Explanation Generator",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Computer Vision / Image ROI Extraction",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PARTIAL"
+    },
+    {
+      "component": "CSV / JSON Spectrum File Adapter",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Live Camera MediaStream Adapter",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PARTIAL"
+    },
+    {
+      "component": "Hardware Foldscope Adapter Interface",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "SIMULATED ONLY"
+    },
+    {
+      "component": "Cross-Phone Device Calibration Engine",
+      "exists": true,
+      "actuallyImplemented": false,
+      "tested": true,
+      "status": "FAIL"
+    },
+    {
+      "component": "Measurement Audit History & Exporters (CSV, JSON)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PARTIAL"
+    },
+    {
+      "component": "Benchtop UV-Vis Spectrophotometer Comparison Data",
+      "exists": true,
+      "actuallyImplemented": false,
+      "tested": true,
+      "status": "SIMULATED ONLY"
+    },
+    {
+      "component": "Multilingual Speech Synthesizer (Hindi / English)",
+      "exists": true,
+      "actuallyImplemented": true,
+      "tested": true,
+      "status": "PASS"
+    }
+  ],
+  "tests": [
+    {
+      "id": "PHYS-001",
+      "category": "physics",
+      "name": "Beer-Lambert: Identical sample and blank (T = 1.0)",
+      "status": "PASS",
+      "expected": "Absorbance = 0.0000 AU",
+      "actual": "Absorbance = 0.0000 AU",
+      "evidence": "Computed: [0, 0, 0]",
+      "severity": null
+    },
+    {
+      "id": "PHYS-002",
+      "category": "physics",
+      "name": "Beer-Lambert: 50% Transmission (T = 0.5)",
+      "status": "PASS",
+      "expected": "Absorbance = 0.30103 AU",
+      "actual": "Absorbance = 0.30103 AU",
+      "evidence": "Discrepancy: 0.000e+0 AU",
+      "severity": null
+    },
+    {
+      "id": "PHYS-003",
+      "category": "physics",
+      "name": "Beer-Lambert: 10% Transmission (T = 0.1)",
+      "status": "PASS",
+      "expected": "Absorbance = 1.00000 AU",
+      "actual": "Absorbance = 1.00000 AU",
+      "evidence": "Discrepancy: 0.000e+0 AU",
+      "severity": null
+    },
+    {
+      "id": "PHYS-004",
+      "category": "physics",
+      "name": "Beer-Lambert: Sample intensity > blank (T = 1.5, fluorescence/gain)",
+      "status": "PASS",
+      "expected": "Absorbance clamped to 0.0 AU (negative absorbance suppressed)",
+      "actual": "Absorbance = 0 AU",
+      "evidence": "Sample=150, Blank=100 -> Output: 0 AU",
+      "severity": null
+    },
+    {
+      "id": "PHYS-005",
+      "category": "physics",
+      "name": "Beer-Lambert: Zero sample intensity (dark signal)",
+      "status": "PASS",
+      "expected": "Absorbance clamped to upper detector limit (3.5 AU)",
+      "actual": "Absorbance = 3.5 AU",
+      "evidence": "Sample=0 clamped to detector floor 3.5 AU",
+      "severity": null
+    },
+    {
+      "id": "PHYS-006",
+      "category": "physics",
+      "name": "Beer-Lambert: Zero blank intensity (divide by zero guard)",
+      "status": "PASS",
+      "expected": "Finite non-negative absorbance (blank intensity floored to 1e-4)",
+      "actual": "Absorbance = 0 AU",
+      "evidence": "Output: 0 AU (Number.isFinite: true)",
+      "severity": null
+    },
+    {
+      "id": "PHYS-007",
+      "category": "physics",
+      "name": "Beer-Lambert: Non-finite inputs (NaN / Infinity) handling in computeAbsorbance",
+      "status": "PARTIAL",
+      "expected": "NaN / Infinity filtered or guarded with fallback",
+      "actual": "abs[0]=NaN, abs[1]=NaN, abs[2]=0",
+      "evidence": "NaN propagates through computeAbsorbance without throwing. Upstream validateSpectrum catches it if called.",
+      "severity": "MEDIUM"
+    },
+    {
+      "id": "PHYS-008",
+      "category": "physics",
+      "name": "Beer-Lambert: Negative raw intensity handling",
+      "status": "PASS",
+      "expected": "Negative intensities floored to 1e-4 -> A = 0.0 AU",
+      "actual": "Absorbance = 0 AU",
+      "evidence": "Blank=-20, Sample=-10 -> Absorbance: 0 AU",
+      "severity": null
+    },
+    {
+      "id": "WAVE-001",
+      "category": "wavelength",
+      "name": "Wavelength Fit: Exactly 2 reference points",
+      "status": "PASS",
+      "expected": "Slope=0.29795, Intercept=400.076, R²=1.0000",
+      "actual": "Slope=0.29795, Intercept=400.076, R²=1.0000",
+      "evidence": "Residual RMS: 0 nm",
+      "severity": null
+    },
+    {
+      "id": "WAVE-002",
+      "category": "wavelength",
+      "name": "Wavelength Fit: All 4 CFL reference emission lines",
+      "status": "PASS",
+      "expected": "R² > 0.999 across 4 lines, residual RMS < 1.0 nm",
+      "actual": "R²=0.9999, Residual RMS=0.86 nm, Slope=0.3005",
+      "evidence": "Lines mapped: Hg Blue -> 436.14nm; Hg Green -> 547.33nm; Eu Red 1 -> 610.43nm; Eu Red 2 -> 631.47nm",
+      "severity": null
+    },
+    {
+      "id": "WAVE-003",
+      "category": "wavelength",
+      "name": "Wavelength Fit: Insufficient points (< 2 points fallback behavior)",
+      "status": "FAIL",
+      "expected": "Should return status error or low confidence / NaN R² for <2 points",
+      "actual": "App returned hard-coded R² = 0.9995 and slope = 0.3",
+      "evidence": "CRITICAL FAKE METRIC: Line 33 of wavelength.ts hard-codes r2: 0.9995 when points.length < 2!",
+      "severity": "HIGH"
+    },
+    {
+      "id": "WAVE-004",
+      "category": "wavelength",
+      "name": "Wavelength Fit: Identical pixel coordinates (denom = 0)",
+      "status": "PASS",
+      "expected": "Guards against division by zero (default slope 0.3 applied)",
+      "actual": "Slope=0.3, Intercept=430.95, R²=0",
+      "evidence": "Denom=0 handled gracefully by fallback slope 0.3",
+      "severity": null
+    },
+    {
+      "id": "WAVE-005",
+      "category": "wavelength",
+      "name": "Wavelength Fit: Out-of-order points",
+      "status": "PASS",
+      "expected": "Least-squares fit invariant to input order",
+      "actual": "R²=0.9999, Slope=0.3004",
+      "evidence": "Least squares sum formulation is permutation-invariant.",
+      "severity": null
+    },
+    {
+      "id": "SPEC-001",
+      "category": "spectrum",
+      "name": "Resampling: Interpolation onto 151 standard wavelengths (400-700 nm @ 2 nm)",
+      "status": "PASS",
+      "expected": "151 uniformly spaced points, boundary clamped, linearly interpolated",
+      "actual": "Produced 151 points, min=40.0, max=160.0",
+      "evidence": "Interpolated points valid, endpoints correctly clamped",
+      "severity": null
+    },
+    {
+      "id": "ALIGN-001",
+      "category": "alignment",
+      "name": "Cross-Correlation Alignment: Shift recovery and tolerance thresholding",
+      "status": "PASS",
+      "expected": "Shift magnitude recovered accurately; shifts > 6px flagged as WARNING/FAIL",
+      "actual": "Shifts tested: +1px -> det -1, r=0.99; +3px -> det -3, r=0.98; +6px -> det -6, r=0.94; +8px -> det -8, r=0.90, WARNING",
+      "evidence": "Alignment recovers shift sign & magnitude up to maxShift window (12 px).",
+      "severity": null
+    },
+    {
+      "id": "SPEC-002",
+      "category": "spectrum",
+      "name": "Spectrum Smoothing: Moving average window = 3",
+      "status": "PASS",
+      "expected": "Smoothed[1] = 13.33",
+      "actual": "Smoothed[1] = 13.33",
+      "evidence": "Array smoothed: [15.0, 13.3, 20.0, 16.7, 26.7, 20.0, 25.0]",
+      "severity": null
+    },
+    {
+      "id": "SPEC-003",
+      "category": "spectrum",
+      "name": "Frame Aggregation: Robust median rejects extreme optical burst outliers",
+      "status": "PASS",
+      "expected": "Aggregated[2] = 102.5 (500 outlier rejected)",
+      "actual": "Aggregated[2] = 102.5",
+      "evidence": "Median frame values: [11.5, 21.5, 102.5]",
+      "severity": null
+    },
+    {
+      "id": "CAL-001",
+      "category": "calibration",
+      "name": "Beer-Lambert Calibration: Perfect linear synthetic standards",
+      "status": "PASS",
+      "expected": "Slope = 1.2500, Intercept = 0.0200, R² = 1.0000",
+      "actual": "Slope = 1.25, Intercept = 0.02, R² = 1",
+      "evidence": "RMSE = 0 AU, LOD = 0 mg/L, LOQ = 0 mg/L",
+      "severity": null
+    },
+    {
+      "id": "CAL-002",
+      "category": "calibration",
+      "name": "LOD & LOQ Calculation: IUPAC / ICH Q2(R1) guideline formula validation",
+      "status": "PASS",
+      "expected": "LOD = 3.3 * syx / slope, LOQ = 10 * syx / slope",
+      "actual": "LOD = 0.1842 mg/L, LOQ = 0.5583 mg/L",
+      "evidence": "Formulas verified against syx = 0.0566 and slope = 1.0142",
+      "severity": null
+    },
+    {
+      "id": "CAL-003",
+      "category": "calibration",
+      "name": "Beer-Lambert Calibration: Insufficient calibration points (< 2)",
+      "status": "FAIL",
+      "expected": "Should return an error or invalid calibration flag",
+      "actual": "App returned hard-coded R² = 0.99 and slope = 1",
+      "evidence": "CRITICAL FAKE METRIC: beerLambert.ts line 29 hard-codes r2: 0.99, rmse: 0.02 when n < 2!",
+      "severity": "HIGH"
+    },
+    {
+      "id": "CAL-004",
+      "category": "calibration",
+      "name": "Beer-Lambert Calibration: Identical concentrations (ssTot = 0)",
+      "status": "PARTIAL",
+      "expected": "Guards against division by zero without falsely claiming 0.99",
+      "actual": "R² = 0.99, Slope = 1",
+      "evidence": "beerLambert.ts line 78 defaults r2 to 0.99 if ssTot == 0",
+      "severity": "MEDIUM"
+    },
+    {
+      "id": "BEER-001",
+      "category": "beer-lambert",
+      "name": "Beer-Lambert Model: Prediction error across dynamic range (0.05 - 1.00 mg/L)",
+      "status": "PASS",
+      "expected": "RMSE < 0.001 mg/L on noiseless synthetic standards",
+      "actual": "MAE = 0.000e+0 mg/L, RMSE = 0.000e+0 mg/L, MaxErr = 0.000e+0 mg/L",
+      "evidence": "Individual predictions match ground truth within floating point epsilon",
+      "severity": null
+    },
+    {
+      "id": "RIDGE-001",
+      "category": "ml-ridge",
+      "name": "Ridge Regression: Training fit & LOOCV execution",
+      "status": "PASS",
+      "expected": "R² > 0.99, LOOCV RMSE < 0.05 mg/L",
+      "actual": "Train R² = 0.9996, Train RMSE = 0.0076 mg/L, LOOCV RMSE = 0.0193 mg/L",
+      "evidence": "Features = 151 wavelengths, Standards = 21 runs (7 concs × 3 replicates)",
+      "severity": null
+    },
+    {
+      "id": "LEAK-001",
+      "category": "data-leakage",
+      "name": "Cross-Validation Leakage Audit: Replicate contamination in LOOCV",
+      "status": "FAIL",
+      "expected": "Leave-One-Concentration-Out (Group CV) required when multiple replicates exist",
+      "actual": "Standard LOOCV splits individual sample replicates (21 samples total, 3 per concentration). When sample i is left out, 2 identical target concentration samples remain in the training fold.",
+      "evidence": "In demoData.ts line 38, generatePhosphateCalibrationStandards produces 3 replicates per conc. In ridge.ts line 157, LOOCV leaves out 1 sample out of 21. Reported LOOCV RMSE (0.0193 mg/L) is overly optimistic due to replicate leakage.",
+      "severity": "HIGH"
+    },
+    {
+      "id": "MSEL-001",
+      "category": "model-selection",
+      "name": "Model Selection: Objective selection based on LOOCV RMSE (not biased towards AI)",
+      "status": "PASS",
+      "expected": "Selects lower LOOCV RMSE regardless of model architecture (can select Beer-Lambert)",
+      "actual": "When Beer has lower LOOCV -> selected: beer-lambert; When Ridge has lower -> selected: ridge",
+      "evidence": "Model selection relies purely on loocvRmse comparison (ridgeMetrics.loocvRmse < beerMetrics.loocvRmse)",
+      "severity": null
+    },
+    {
+      "id": "UNC-001",
+      "category": "uncertainty",
+      "name": "Uncertainty Inflation for OOD and Range Edge Samples",
+      "status": "PASS",
+      "expected": "Uncertainty increases for OOD and range edges",
+      "actual": "Clean: ±0.038 -> Edge: ±0.051 -> OOD: ±0.105",
+      "evidence": "OOD inflation factor: 1.0 + (ood - 1.8)*0.8; Edge penalty: 1.35x",
+      "severity": null
+    },
+    {
+      "id": "UNC-002",
+      "category": "uncertainty",
+      "name": "Uncertainty: Sample-level shot noise sensitivity",
+      "status": "FAIL",
+      "expected": "Higher sensor shot noise should expand predictive confidence interval",
+      "actual": "Clean noise (OOD 0.8): ±0.038 mg/L; Elevated noise (OOD 1.2): ±0.038 mg/L (IDENTICAL)",
+      "evidence": "CRITICAL AUDIT FINDING: Base standard error is fixed to LOOCV RMSE (Math.max(0.015, loocvRmse)). It does NOT incorporate sample-specific spectral residual variance or SNR. Only OOD distance > 1.8 triggers inflation.",
+      "severity": "HIGH"
+    },
+    {
+      "id": "OOD-001",
+      "category": "ood",
+      "name": "OOD Engine: In-Distribution Standard (Phosphate 0.40 mg/L)",
+      "status": "PASS",
+      "expected": "Status: IN_DISTRIBUTION, isAnomaly: false, score < 1.8",
+      "actual": "Status: IN_DISTRIBUTION, isAnomaly: false, score: 0.38",
+      "evidence": "Nearest standard concentration: 0.4 mg/L",
+      "severity": null
+    },
+    {
+      "id": "OOD-002",
+      "category": "ood",
+      "name": "OOD Engine: Flagship 'AI Knows When It Does Not Know' (Tartrazine Dye Anomaly)",
+      "status": "PASS",
+      "expected": "Status: OUT_OF_DISTRIBUTION, isAnomaly: true, score > 3.0",
+      "actual": "Status: OUT_OF_DISTRIBUTION, isAnomaly: true, score: 5.04",
+      "evidence": "Shape correlation with molybdenum blue manifold severely broken (r = -0.42), triggering full rejection",
+      "severity": null
+    },
+    {
+      "id": "OOD-003",
+      "category": "ood",
+      "name": "Pipeline Rejection: Refusal to report a number on anomalous input",
+      "status": "PASS",
+      "expected": "concentration = null, isRejected = true, verdict = REJECTED",
+      "actual": "concentration = null, isRejected = true, verdict = REJECTED",
+      "evidence": "Rejection reason: 'LISA REFUSED TO REPORT A NUMBER: Sample optical signature is outside the validated calibration manifold. Laboratory verification required.'",
+      "severity": null
+    },
+    {
+      "id": "QC-001",
+      "category": "qc",
+      "name": "QC Rule 1: Sensor Pixel Saturation Check (Peak intensity >= 250)",
+      "status": "PASS",
+      "expected": "Status = FAIL, canProceed = false",
+      "actual": "Status = FAIL, canProceed = false",
+      "evidence": "Detail: Sensor pixel saturation detected (Max 255 ≥ 250). Reduce camera exposure compensation.",
+      "severity": null
+    },
+    {
+      "id": "QC-002",
+      "category": "qc",
+      "name": "QC Rule 2: Low Optical Signal Check (Peak intensity < 30)",
+      "status": "PASS",
+      "expected": "Status = FAIL, canProceed = false",
+      "actual": "Status = FAIL, canProceed = false",
+      "evidence": "Detail: Critical low optical throughput (Peak 25 < 30). Verify illumination LED alignment.",
+      "severity": null
+    },
+    {
+      "id": "QC-003",
+      "category": "qc",
+      "name": "QC Rule 3: Mechanical Cuvette Shift Check (|shift| > 6px)",
+      "status": "PASS",
+      "expected": "Status = FAIL, canProceed = false",
+      "actual": "Status = FAIL, canProceed = false",
+      "evidence": "Detail: Excessive cuvette displacement (+8px > ±6px). Re-seat cuvette in chamber.",
+      "severity": null
+    },
+    {
+      "id": "QC-004",
+      "category": "qc",
+      "name": "QC Rule 4: Dynamic Range Over-Range Check (conc > 1.15 mg/L)",
+      "status": "PASS",
+      "expected": "Status = FAIL, triggers 1:10 dilution recommendation",
+      "actual": "Status = FAIL, detail: Concentration 1.85 mg/L exceeds highest standard (1.0 mg/L). Sample above range: Dilute 1:10.",
+      "evidence": "Prompts user dilution instruction",
+      "severity": null
+    },
+    {
+      "id": "QC-005",
+      "category": "qc",
+      "name": "QC Rule 5: Matrix Turbidity / Organic Color Check (Blue AU > 0.25)",
+      "status": "PASS",
+      "expected": "Status = WARNING (non-fatal advisory for sample blanking)",
+      "actual": "Status = WARNING, detail: Significant matrix turbidity or organic color detected (Baseline 0.350 AU). Perform sample blank.",
+      "evidence": "Advisory warning triggers without outright scientific rejection",
+      "severity": null
+    },
+    {
+      "id": "DEV-001",
+      "category": "device-calibration",
+      "name": "Device Normalization Function: Sensitivity mapping when isCalibrated = true",
+      "status": "PASS",
+      "expected": "normalizeDeviceSpectrum divides by spectralSensitivity when isCalibrated is true",
+      "actual": "Uncalibrated[0]=100, Calibrated[0]=106.38",
+      "evidence": "Function works when invoked directly.",
+      "severity": null
+    },
+    {
+      "id": "DEV-002",
+      "category": "device-calibration",
+      "name": "Device Calibration: End-to-End Pipeline Integration Check",
+      "status": "FAIL",
+      "expected": "executeLISAPipeline should invoke normalizeDeviceSpectrum on raw intensities",
+      "actual": "normalizeDeviceSpectrum is unreferenced in orchestrator.ts, App.tsx, and all components.",
+      "evidence": "CRITICAL ARCHITECTURAL GAP: normalizeDeviceSpectrum is DEAD CODE. In App.tsx, calibrating a phone only changes a boolean and UI badge; optical data is never normalized in executeLISAPipeline.",
+      "severity": "HIGH"
+    },
+    {
+      "id": "ADAPT-001",
+      "category": "adapters",
+      "name": "CSV Adapter: Valid 151-point wavelength/intensity CSV",
+      "status": "PASS",
+      "expected": "Success = true, 151 points extracted",
+      "actual": "Success = true, Points = 151",
+      "evidence": "Standard CSV parsed and resampled onto grid",
+      "severity": null
+    },
+    {
+      "id": "ADAPT-002",
+      "category": "adapters",
+      "name": "CSV Adapter: Empty file rejection",
+      "status": "PASS",
+      "expected": "Success = false, descriptive error",
+      "actual": "Success = false, Error = 'CSV file contains insufficient rows (minimum 5 required).'",
+      "evidence": "Empty file gracefully rejected",
+      "severity": null
+    },
+    {
+      "id": "ADAPT-003",
+      "category": "adapters",
+      "name": "CSV Adapter: Non-numeric strings rejection",
+      "status": "PASS",
+      "expected": "Success = false, rejects non-numeric entries",
+      "actual": "Success = false, Error = 'Could not extract at least 10 valid numeric wavelength/intensity pairs.'",
+      "evidence": "Non-numeric entries gracefully rejected without uncaught exception",
+      "severity": null
+    },
+    {
+      "id": "ADAPT-004",
+      "category": "adapters",
+      "name": "JSON Adapter: Minimum data length validation (< 10 points)",
+      "status": "PASS",
+      "expected": "Rejects < 10 points with descriptive message",
+      "actual": "Success = false, Error = 'JSON must contain a \"wavelengths\" array with at least 10 points.'",
+      "evidence": "Enforces minimum 10 points requirement",
+      "severity": null
+    },
+    {
+      "id": "ADAPT-005",
+      "category": "adapters",
+      "name": "JSON Adapter: Valid 15-point JSON resampled to standard grid",
+      "status": "PASS",
+      "expected": "Success = true, resampled to 151 standard wavelengths",
+      "actual": "Success = true, Wavelengths count = 151",
+      "evidence": "Valid JSON parsed and resampled",
+      "severity": null
+    },
+    {
+      "id": "ADAPT-006",
+      "category": "adapters",
+      "name": "JSON Adapter: Malformed JSON syntax error handling",
+      "status": "PASS",
+      "expected": "Success = false, catches JSON syntax error",
+      "actual": "Success = false, Error = 'JSON parse error: Expected double-quoted property name in JSON at position 23 (line 1 column 24)'",
+      "evidence": "Catches parse syntax exception gracefully",
+      "severity": null
+    },
+    {
+      "id": "PERF-001",
+      "category": "performance",
+      "name": "Pipeline Execution Latency across spectrum point scales",
+      "status": "PASS",
+      "expected": "Latency < 250ms even for 10,000 points",
+      "actual": "100 pts: 0.28ms, 500 pts: 0.17ms, 1000 pts: 0.29ms, 10000 pts: 2.76ms",
+      "evidence": "Max latency: 2.76ms at 10,000 wavelengths. Well within 60fps real-time envelope.",
+      "severity": null
+    },
+    {
+      "id": "REPRO-001",
+      "category": "reproducibility",
+      "name": "Deterministic Reproducibility: Seeded PRNG guarantees bitwise identical results",
+      "status": "PASS",
+      "expected": "Concentration, uncertainty, and QC bitwise identical for identical seed",
+      "actual": "Run A: 0.394 ± 0.038 mg/L; Run B: 0.394 ± 0.038 mg/L",
+      "evidence": "Delta concentration: 0",
+      "severity": null
+    },
+    {
+      "id": "TRACE-001",
+      "category": "trace",
+      "name": "End-to-End Forensic Trace: Vial Y (0.40 mg P/L)",
+      "status": "PASS",
+      "expected": "Predict 0.40 ± 0.04 mg P/L, error < 5.0%, QC PASS, OOD IN_DISTRIBUTION",
+      "actual": "Predicted 0.396 ± 0.038 mg P/L, Error: 1%",
+      "evidence": "Trace verified from raw photons through cross-correlation, Beer-Lambert / Ridge, QC, and UI representation",
+      "severity": null
+    }
+  ],
+  "scientificValidation": {
+    "physicsEngine": {
+      "beerLambertValid": true,
+      "maxDiscrepancyAU": 0.0,
+      "edgeCaseGuards": "Transmittance clamped to [1e-4, 2.0], Absorbance clamped to [0, 3.5] AU"
+    },
+    "wavelengthCalibration": {
+      "referenceLines": [435.83, 546.07, 611.20, 631.00],
+      "r2Real": 0.9999,
+      "residualRmsNm": 0.86,
+      "insufficientDataFallbackBug": "r2 hard-coded to 0.9995 when points < 2"
+    },
+    "calibrationStandards": {
+      "analyte": "phosphate",
+      "method": "US EPA 365.3 (Molybdenum Blue)",
+      "concentrationsMgL": [0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0],
+      "slopeAUPerMgL": 1.0142,
+      "interceptAU": 0.0443,
+      "beerR2": 0.9772,
+      "beerRmseAU": 0.0539,
+      "beerLoocvRmseMgL": 0.0566,
+      "lodMgL": 0.1842,
+      "loqMgL": 0.5583
+    },
+    "mlRidgeModel": {
+      "features": 151,
+      "alpha": 0.05,
+      "trainR2": 0.9996,
+      "trainRmseMgL": 0.0076,
+      "loocvRmseMgL": 0.0193,
+      "replicateLeakageFlag": true
+    },
+    "uncertaintyModel": {
+      "baseStandardError": "Fixed to LOOCV RMSE (0.0193 mg/L)",
+      "sensorShotNoiseSensitivity": false,
+      "oodInflation": true,
+      "degreesOfFreedomHardcoded": 19
+    },
+    "oodEngine": {
+      "metric": "Standardized Mahalanobis-Manhattan distance + Pearson shape correlation",
+      "thresholds": "In-Distribution <= 1.8; Borderline 1.8-3.0; Out-of-Distribution > 3.0 or r < 0.35",
+      "falsePositiveRateOnStandards": 0.0,
+      "rejectionRateOnTartrazineDye": 1.0
+    }
+  },
+  "metrics": {
+    "totalTestsRun": 46,
+    "passCount": 39,
+    "partialCount": 2,
+    "failCount": 5,
+    "notTestableCount": 0,
+    "criticalBugs": 1,
+    "highBugs": 5,
+    "mediumBugs": 4,
+    "lowBugs": 2,
+    "demoSuccessRate": 100.0,
+    "adversarialSuccessRate": 100.0,
+    "averagePipelineLatencyMs": 3.80,
+    "maxPipelineLatencyMs": 33.23
+  },
+  "bugs": [
+    {
+      "id": "BUG-001",
+      "severity": "CRITICAL",
+      "component": "src/engine/orchestrator.ts:101",
+      "reproduction": "Select 'Total Iron' in the header dropdown and click [CAPTURE & ANALYSE].",
+      "expected": "Pipeline loads iron calibration standards, uses 500-525 nm band, and predicts iron concentration.",
+      "actual": "Pipeline hardcodes `const analyte = ANALYTE_REGISTRY[0]` (Phosphate) and executes phosphate calibration across 630-690 nm band while labeling output with Iron units.",
+      "evidence": "Line 101 of orchestrator.ts: `const analyte = ANALYTE_REGISTRY[0]; // Phosphate as primary`. PipelineExecutionOptions does not even accept an analyte parameter.",
+      "likelyCause": "Phosphate was implemented as the single demo analyte; multi-analyte orchestrator dispatch was left stubbed.",
+      "recommendedFix": "Pass selected `analyteId` in `PipelineExecutionOptions` and instantiate/cache analyte-specific calibration standards."
+    },
+    {
+      "id": "BUG-002",
+      "severity": "HIGH",
+      "component": "src/engine/deviceCalibration.ts:64 & src/engine/orchestrator.ts",
+      "reproduction": "Open 'CALIBRATE PHONE', select Device B (Warm sensor), run fingerprinting until calibrated. Run a scan.",
+      "expected": "Raw sensor intensities are divided by `device.spectralSensitivity` via `normalizeDeviceSpectrum` before computing absorbance.",
+      "actual": "`normalizeDeviceSpectrum` is never called anywhere in the codebase. Results on Device B are identical whether calibrated or uncalibrated.",
+      "evidence": "`grep -r normalizeDeviceSpectrum src/` returns only the definition in `deviceCalibration.ts:64`. It is dead code.",
+      "likelyCause": "Device calibration UI modal was built with animated steps, but the normalization hook into `executeLISAPipeline` was omitted.",
+      "recommendedFix": "Invoke `normalizeDeviceSpectrum(sampleIntensities, activeDevice)` inside `executeLISAPipeline` before alignment."
+    },
+    {
+      "id": "BUG-003",
+      "severity": "HIGH",
+      "component": "src/engine/ridge.ts:157 & src/data/demoData.ts:38",
+      "reproduction": "Inspect LOOCV loop in `fitRidgeRegression`.",
+      "expected": "Grouped Cross-Validation (Leave-One-Concentration-Out) so replicates of the same concentration are excluded together.",
+      "actual": "Standard LOOCV excludes 1 replicate out of 21, leaving 2 identical-concentration replicates in the training fold.",
+      "evidence": "21 standards generated (7 concs × 3 reps). Training fold retains identical target concentrations, artificially suppressing LOOCV RMSE to 0.0193 mg/L.",
+      "likelyCause": "Standard LOOCV implementation did not account for replicate grouping.",
+      "recommendedFix": "Implement Leave-One-Group-Out CV grouped by target concentration."
+    },
+    {
+      "id": "BUG-004",
+      "severity": "HIGH",
+      "component": "src/engine/uncertainty.ts:20",
+      "reproduction": "Run pipeline on clean standard (noiseLevel = 0.015) vs noisy standard (noiseLevel = 0.08).",
+      "expected": "Uncertainty expanded for noisy standard.",
+      "actual": "Both produce identical uncertainty (±0.038 mg/L).",
+      "evidence": "Line 20 of uncertainty.ts: `let se = Math.max(0.015, loocvRmse);`. Standard error is fixed to calibration LOOCV error and ignores sample SNR.",
+      "likelyCause": "Uncertainty estimator was designed around calibration variance rather than combining calibration variance with sample residual variance.",
+      "recommendedFix": "Incorporate sample spectral residual variance `s_res^2 = sum(A_measured - A_reconstructed)^2 / df` into the standard error."
+    },
+    {
+      "id": "BUG-005",
+      "severity": "HIGH",
+      "component": "src/engine/wavelength.ts:33 & src/engine/beerLambert.ts:29",
+      "reproduction": "Pass fewer than 2 points to `fitWavelengthCalibration` or `fitBeerLambertModel`.",
+      "expected": "Return an error, throw, or return NaN R².",
+      "actual": "Returns fake excellent metrics: Wavelength R² = 0.9995; Beer-Lambert R² = 0.99.",
+      "evidence": "wavelength.ts line 33: `r2: 0.9995`; beerLambert.ts line 29: `r2: 0.99, rmse: 0.02`.",
+      "likelyCause": "Premature mock fallback values inserted during initial prototyping to prevent UI crashes.",
+      "recommendedFix": "Return explicit error status `isValid: false` and `r2: NaN` when points < 2."
+    },
+    {
+      "id": "BUG-006",
+      "severity": "HIGH",
+      "component": "src/components/AcquisitionPanel.tsx:448 & src/App.tsx:84",
+      "reproduction": "Select 'LIVE CAMERA' or 'HARDWARE' source mode and click [CAPTURE & ANALYSE].",
+      "expected": "Camera video frame is grabbed and binned, or hardware adapter is polled.",
+      "actual": "Pipeline silently ignores the camera stream and hardware adapter, running `simulateSpectrum` instead.",
+      "evidence": "In App.tsx line 104: `let simData = simulateSpectrum(params); let sampleIntensities = customSampleIntensities || simData.sampleIntensities;`. Live camera does not pass customSampleIntensities.",
+      "likelyCause": "Physical camera frame binning loop was not wired to the CAPTURE trigger.",
+      "recommendedFix": "Render canvas frame grab from `<video ref={videoRef}>` and pass extracted profile to `onUploadSpectrumData`."
+    },
+    {
+      "id": "BUG-007",
+      "severity": "MEDIUM",
+      "component": "src/components/ModelComparison.tsx:55",
+      "reproduction": "Inspect Calibration RMSE row in Model Comparison table.",
+      "expected": "Beer-Lambert RMSE shown in Absorbance Units (AU) or converted to concentration units.",
+      "actual": "Displays `0.0539 mg/L` for Beer-Lambert, comparing Absorbance RMSE directly against Ridge concentration RMSE (0.0076 mg/L).",
+      "evidence": "beerLambert.ts line 79 computes RMSE on `residual = pt.a - fitted` (AU). ModelComparison.tsx displays `{beerMetrics.rmse.toFixed(4)} mg/L`.",
+      "likelyCause": "Unit label was copy-pasted without converting absorbance residual to concentration via division by slope.",
+      "recommendedFix": "Compute concentration RMSE for Beer-Lambert: `rmse_conc = rmse_abs / slope`."
+    },
+    {
+      "id": "BUG-008",
+      "severity": "MEDIUM",
+      "component": "src/components/ResultCard.tsx:151",
+      "reproduction": "Inspect ResultCard confidence display in DOM.",
+      "expected": "Displays dynamically calculated confidence percentage from `uncertaintyEstimate.confidencePercent`.",
+      "actual": "Displays hard-coded string `HIGH (96%)` whenever `oodStatus === 'IN_DISTRIBUTION'`.",
+      "evidence": "Line 151 of ResultCard.tsx: `CONFIDENCE: {record.oodStatus === 'IN_DISTRIBUTION' ? 'HIGH (96%)' : 'MODERATE'}`.",
+      "likelyCause": "Hardcoded placeholder in JSX never wired to `explanation.confidencePercent`.",
+      "recommendedFix": "Bind to `record.explanation?.confidencePercent` or compute dynamically."
+    },
+    {
+      "id": "BUG-009",
+      "severity": "MEDIUM",
+      "component": "src/components/HistoryDrawer.tsx & src/App.tsx:62",
+      "reproduction": "Record 5 measurements, then refresh browser (F5 / Cmd+R).",
+      "expected": "Past measurement audit log persists across page reload.",
+      "actual": "All measurement history is wiped clean on reload.",
+      "evidence": "App.tsx line 62 uses in-memory React state: `const [history, setHistory] = useState<MeasurementRecord[]>([]);` without `localStorage` synchronization.",
+      "likelyCause": "Initial prototype used ephemeral React state.",
+      "recommendedFix": "Persist `history` in `localStorage` with `useEffect` sync."
+    },
+    {
+      "id": "BUG-010",
+      "severity": "MEDIUM",
+      "component": "src/adapters/imageRoi.ts:54",
+      "reproduction": "Upload an image with a spectral band centered at Y=250.",
+      "expected": "ROI vertical center accurately captures Y=250.",
+      "actual": "Row variance peaks at the sharp edge transition (Y=230) rather than the center of the band (Y=250), shifting the ROI upward.",
+      "evidence": "test_roi_cv.ts output: center detected at Y=230 vs true center Y=250.",
+      "likelyCause": "Picks maximum single-row variance instead of centroid / center-of-mass across rows.",
+      "recommendedFix": "Calculate center of mass of the top 20% variance rows."
+    },
+    {
+      "id": "BUG-011",
+      "severity": "LOW",
+      "component": "src/components/DiagnosticsModal.tsx:51",
+      "reproduction": "Open Diagnostics before running any measurement.",
+      "expected": "Displays `0 ms` or `N/A`.",
+      "actual": "Displays hard-coded `18.4 ms`.",
+      "evidence": "DiagnosticsModal.tsx line 51: `{lastExecutionMs > 0 ? `${lastExecutionMs} ms` : '18.4 ms'}`.",
+      "likelyCause": "Mock default value.",
+      "recommendedFix": "Display `-- ms` when `lastExecutionMs === 0`."
+    },
+    {
+      "id": "BUG-012",
+      "severity": "LOW",
+      "component": "src/styles/instrument.css:83",
+      "reproduction": "View app on mobile viewport (width < 450px).",
+      "expected": "Header buttons collapse into mobile menu / drawer.",
+      "actual": "Header toolbar buttons overflow horizontally, causing horizontal scroll on mobile.",
+      "evidence": "instrument-header is fixed height 60px with `justify-content: space-between` and 9 buttons.",
+      "likelyCause": "Desktop-first hackathon prototype layout.",
+      "recommendedFix": "Add hamburger menu on `@media (max-width: 768px)`."
+    }
+  ],
+  "missingFeatures": [
+    {
+      "feature": "Multi-Analyte Calibration Switching",
+      "description": "Orchestrator only computes and holds Phosphate calibration standards; selecting Iron/Fluoride/Nitrate/Lead does not load analyte-specific calibration curves.",
+      "status": "NOT IMPLEMENTED"
+    },
+    {
+      "feature": "Physical Camera Continuous Stream Grabber",
+      "description": "Live camera renders video element but does not grab frames on 'CAPTURE & ANALYSE'.",
+      "status": "NOT IMPLEMENTED"
+    },
+    {
+      "feature": "Real Hardware BLE / USB Serial Link",
+      "description": "Hardware adapter is a simulation stub.",
+      "status": "SIMULATED ONLY"
+    },
+    {
+      "feature": "Persistent History Storage",
+      "description": "Measurement audit trail resets on browser refresh.",
+      "status": "NOT IMPLEMENTED"
+    },
+    {
+      "feature": "Grouped / Leave-One-Concentration-Out Cross-Validation",
+      "description": "Ridge LOOCV currently suffers from replicate contamination.",
+      "status": "NOT IMPLEMENTED"
+    }
+  ],
+  "hardcodedResults": [
+    {
+      "file": "src/engine/beerLambert.ts",
+      "line": 29,
+      "value": "r2: 0.99, rmse: 0.02, lod: 0.05, loq: 0.15",
+      "purpose": "Fallback when calibration standards n < 2",
+      "legitimacy": "Misleading (claims excellent linearity on insufficient data)"
+    },
+    {
+      "file": "src/engine/wavelength.ts",
+      "line": 33,
+      "value": "r2: 0.9995, residualRms: 0.8",
+      "purpose": "Fallback when emission line points < 2",
+      "legitimacy": "Misleading (claims high precision on insufficient points)"
+    },
+    {
+      "file": "src/components/ResultCard.tsx",
+      "line": 151,
+      "value": "CONFIDENCE: HIGH (96%)",
+      "purpose": "In-distribution confidence readout",
+      "legitimacy": "Hardcoded cosmetic percentage in JSX"
+    },
+    {
+      "file": "src/engine/uncertainty.ts",
+      "line": 60,
+      "value": "degreesOfFreedom: 19",
+      "purpose": "t-distribution degrees of freedom",
+      "legitimacy": "Hardcoded constant"
+    },
+    {
+      "file": "src/components/DiagnosticsModal.tsx",
+      "line": 51,
+      "value": "18.4 ms",
+      "purpose": "Fallback telemetry latency",
+      "legitimacy": "Hardcoded placeholder"
+    },
+    {
+      "file": "src/data/labBenchmark.ts",
+      "line": 16,
+      "value": "7-row table comparing ₹10-lakh Shimadzu UV-2600 to ₹2,000 LISA",
+      "purpose": "Developer Diagnostics benchmark table",
+      "legitimacy": "Simulated synthetic benchmark presented as physical lab trial"
+    }
+  ],
+  "demoRuns": [
+    { "run": 1, "durationMs": 33.23, "conc": 0.391, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 2, "durationMs": 0.60, "conc": 0.396, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 3, "durationMs": 0.45, "conc": 0.392, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 4, "durationMs": 0.45, "conc": 0.393, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 5, "durationMs": 0.44, "conc": 0.393, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 6, "durationMs": 0.53, "conc": 0.395, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 7, "durationMs": 0.42, "conc": 0.393, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 8, "durationMs": 0.41, "conc": 0.395, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 9, "durationMs": 0.85, "conc": 0.392, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true },
+    { "run": 10, "durationMs": 0.59, "conc": 0.390, "unc": 0.038, "qc": "PASS", "ood": "IN_DISTRIBUTION", "success": true }
+  ],
+  "endToEndTrace": {
+    "sampleName": "Vial Y (Spiked Agricultural Runoff)",
+    "groundTruthConcentrationMgL": 0.40,
+    "stages": {
+      "rawInput": { "samplePeakIntensity": 185.78, "blankPeakIntensity": 202.04 },
+      "resampling": { "inputPoints": 151, "outputPoints": 151, "grid": "400-700 nm @ 2 nm" },
+      "alignment": { "shiftDetectedPx": -2, "pearsonR": 0.992, "status": "PASS" },
+      "absorbanceCalculation": { "formula": "A = -log10(I_sample / I_blank)", "peakAbsorbanceAU": 0.6997 },
+      "baselineCorrection": { "method": "offset-zero", "offsetSubtractedAU": 0.0330, "correctedPeakAU": 0.6667 },
+      "beerLambertFit": { "equation": "A(630-690nm) = 1.015 × C + 0.0443", "predictedConc": 0.408 },
+      "ridgeRegression": { "alpha": 0.05, "wavelengthsUsed": 151, "predictedConc": 0.396 },
+      "modelSelection": { "decision": "ridge", "rationale": "Ridge LOOCV RMSE (0.0193) < Beer LOOCV RMSE (0.0566)" },
+      "oodEvaluation": { "score": 0.39, "status": "IN_DISTRIBUTION", "isAnomaly": false },
+      "qualityControl": { "overallStatus": "PASS", "saturation": "PASS", "signal": "PASS", "shift": "PASS", "range": "PASS", "turbidity": "PASS" },
+      "uncertainty": { "marginMgL": 0.038, "lowerBoundMgL": 0.358, "upperBoundMgL": 0.434, "confidenceScore": "HIGH" },
+      "finalVerdict": { "concentrationMgL": 0.396, "uncertaintyMgL": 0.038, "verdict": "ALERT", "label": "ALERT: Likely Contamination", "percentErrorVsGroundTruth": 1.0 }
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "P0",
+      "component": "orchestrator.ts",
+      "action": "Enable dynamic multi-analyte dispatch in executeLISAPipeline so selecting Iron/Fluoride loads their respective calibration models."
+    },
+    {
+      "priority": "P0",
+      "component": "deviceCalibration.ts & orchestrator.ts",
+      "action": "Wire normalizeDeviceSpectrum into executeLISAPipeline to eliminate dead code and make device calibration real."
+    },
+    {
+      "priority": "P1",
+      "component": "ridge.ts",
+      "action": "Replace standard LOOCV with Grouped Leave-One-Concentration-Out to eliminate replicate leakage."
+    },
+    {
+      "priority": "P1",
+      "component": "uncertainty.ts",
+      "action": "Combine calibration error with sample-specific spectral residual variance so noisy samples exhibit wider confidence bounds."
+    },
+    {
+      "priority": "P1",
+      "component": "wavelength.ts & beerLambert.ts",
+      "action": "Remove hardcoded fallback R² values (0.9995, 0.99) when points < 2; return explicit error."
+    },
+    {
+      "priority": "P2",
+      "component": "AcquisitionPanel.tsx",
+      "action": "Wire live camera frame grab from <video> element to generate 1D profile on Capture."
+    },
+    {
+      "priority": "P2",
+      "component": "App.tsx",
+      "action": "Sync measurement history with localStorage so records survive page reload."
+    },
+    {
+      "priority": "P2",
+      "component": "ModelComparison.tsx",
+      "action": "Fix Beer-Lambert calibration RMSE unit label from mg/L to AU (or convert to mg/L via slope)."
+    },
+    {
+      "priority": "P3",
+      "component": "instrument.css",
+      "action": "Add responsive collapse menu for header buttons on mobile viewports (< 768px)."
+    },
+    {
+      "priority": "P3",
+      "component": "labBenchmark.ts",
+      "action": "Explicitly label Shimadzu UV-Vis split-sample data as 'Simulated Benchtop Reference' rather than implying physical wet-lab trial."
+    }
+  ]
+}

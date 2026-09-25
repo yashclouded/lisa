@@ -1,0 +1,116 @@
+{
+  "analyte": "lead",
+  "status": "roadmap",
+  "provenance": "SIMULATED",
+  "chemicalSpecies": "Pb²⁺ (Lead(II) ion)",
+  "complex": "Lead(II) Dithizonate (Pb(HDz)₂)",
+  "peakWavelengthNm": 520,
+  "primaryBandNm": [505, 535],
+  "calibrationRangeMgL": [0.0, 2.0],
+  "safeThresholdMgL": 0.01,
+  "calibration": {
+    "calibrationId": "LISA-CAL-LEAD-SIM-V1.0",
+    "standardsCount": 33,
+    "concentrationsMgL": [0.0, 0.005, 0.01, 0.02, 0.05, 0.1, 0.25, 0.5, 1.0, 1.5, 2.0],
+    "replicatesPerConcentration": 3,
+    "seed": "LISA-CAL-LEAD-2026",
+    "beerLambert": {
+      "band": [505, 535],
+      "slope": 0.3197,
+      "intercept": 0.0014,
+      "r2": 0.9968,
+      "rmseAU": 0.0121,
+      "concentrationRmseMgL": 0.0379,
+      "syxAU": 0.0125,
+      "lodMgL": 0.1291,
+      "loqMgL": 0.3913
+    },
+    "ridge": {
+      "wavelengthsCount": 151,
+      "alpha": 0.05,
+      "r2": 0.9998,
+      "cvMethod": "Leave-One-Concentration-Out Grouped Cross-Validation",
+      "cvGroupsCount": 11,
+      "cvLeakage": false,
+      "groupedCvRmseMgL": 0.0127,
+      "groupedCvMaeMgL": 0.0084,
+      "groupedCvR2": 0.9996
+    },
+    "selectedModel": "ridge",
+    "oodManifold": {
+      "method": "Mahalanobis distance over PCA subspace (Lead standards)",
+      "inDistributionThreshold": 2.5,
+      "borderlineThreshold": 4.5
+    }
+  },
+  "validation": {
+    "clean040": {
+      "groundTruthMgL": 0.4,
+      "predictedMgL": 0.398,
+      "absoluteErrorMgL": 0.002,
+      "relativeErrorPercent": 0.5,
+      "uncertaintyMgL": 0.085,
+      "selectedModel": "ridge",
+      "qcStatus": "PASS",
+      "oodStatus": "IN_DISTRIBUTION",
+      "oodScore": 0.09,
+      "verdict": "ALERT"
+    },
+    "trace001": {
+      "groundTruthMgL": 0.01,
+      "predictedMgL": 0.01,
+      "lodMgL": 0.1291,
+      "qcStatus": "WARNING",
+      "rangeCheckDetail": "Concentration below Limit of Detection (< 0.13 mg Pb/L). Reported as trace/clean.",
+      "verdict": "SAFE"
+    },
+    "high150": {
+      "groundTruthMgL": 1.5,
+      "predictedMgL": 1.498,
+      "absoluteErrorMgL": 0.002,
+      "qcStatus": "PASS",
+      "oodStatus": "IN_DISTRIBUTION",
+      "verdict": "ALERT"
+    },
+    "turbidInterference": {
+      "groundTruthMgL": 0.4,
+      "turbidityAU": 0.35,
+      "qcStatus": "WARNING",
+      "turbidityDetail": "Significant matrix turbidity or organic color detected",
+      "oodStatus": "IN_DISTRIBUTION"
+    },
+    "unrelatedDyeRejection": {
+      "sample": "Tartrazine Azo Yellow (peak 426 nm)",
+      "testedAs": "lead",
+      "oodStatus": "OUT_OF_DISTRIBUTION",
+      "oodScore": 6.18,
+      "isRejected": true
+    },
+    "phosphateCrossRejection": {
+      "sample": "Molybdenum Blue (peak 675 nm)",
+      "testedAs": "lead",
+      "oodStatus": "OUT_OF_DISTRIBUTION",
+      "oodScore": 13.68,
+      "isRejected": true
+    }
+  },
+  "scenarios": [
+    "scen-lead-reference",
+    "scen-lead-trace",
+    "scen-lead-low",
+    "scen-lead-high",
+    "scen-lead-interference",
+    "scen-lead-unknown"
+  ],
+  "tests": {
+    "totalPipelineTests": 36,
+    "leadSpecificTests": 14,
+    "allPassed": true
+  },
+  "limitations": [
+    "Software simulation only: not experimentally calibrated with physical lead standards on CMOS hardware.",
+    "True drinking-water lead threshold (0.010 mg/L / 10 ppb) is below standard 1.0 cm direct optical transmission LOD (~0.129 mg/L) without solid-phase extraction pre-concentration.",
+    "Cyanide or specialized masking reagents required in wet chemistry to suppress bismuth, cadmium, copper, and zinc dithizone interference.",
+    "Roadmap research mode: clearly delineated from operational Orthophosphate pipeline."
+  ]
+}

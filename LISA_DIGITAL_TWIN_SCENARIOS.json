@@ -1,0 +1,229 @@
+{
+  "note": "SIMULATED. Deterministic digital-twin scenarios. engineOutput is produced by the production LISA pipeline (src/engine) from the seeded simulator; regenerate with `npm run test:twin -- --write`. Not experimental data.",
+  "sensorCalibration": {
+    "model": "λ(p) = a·p + b (production fitWavelengthCalibration over CFL lines placed by the grating equation)",
+    "slopeNmPerPx": 0.33325,
+    "interceptNm": 383.666,
+    "r2": 1,
+    "residualRmsNm": 0.08
+  },
+  "scenarios": [
+    {
+      "id": "clean_phosphate",
+      "label": "Clean sample",
+      "description": "0.40 mg P/L, reference handset, nominal detector noise.",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "phosphate",
+        "concentration": 0.4,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": false,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": 0.395,
+        "uncertainty": 0.203,
+        "unit": "mg P/L",
+        "verdict": "ALERT",
+        "selectedModel": "ridge",
+        "qcStatus": "PASS",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.34,
+        "detectedShiftPx": -1,
+        "isRejected": false,
+        "rejectionReason": null
+      }
+    },
+    {
+      "id": "noisy_sample",
+      "label": "Noisy sample",
+      "description": "Detector noise ×10. The estimate holds; the uncertainty widens.",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "phosphate",
+        "concentration": 0.4,
+        "noiseLevel": 0.15,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": false,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": 0.405,
+        "uncertainty": 0.258,
+        "unit": "mg P/L",
+        "verdict": "ALERT",
+        "selectedModel": "ridge",
+        "qcStatus": "PASS",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.58,
+        "detectedShiftPx": -1,
+        "isRejected": false,
+        "rejectionReason": null
+      }
+    },
+    {
+      "id": "turbid_sample",
+      "label": "Turbid water",
+      "description": "Suspended clay scattering (0.40 AU at 550 nm, ∝ λ⁻¹).",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "phosphate",
+        "concentration": 0.4,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": false,
+        "turbidityAU": 0.4,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": 0.253,
+        "uncertainty": 0.195,
+        "unit": "mg P/L",
+        "verdict": "ALERT",
+        "selectedModel": "ridge",
+        "qcStatus": "WARNING",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.48,
+        "detectedShiftPx": -1,
+        "isRejected": false,
+        "rejectionReason": null
+      }
+    },
+    {
+      "id": "misaligned_sample",
+      "label": "Misaligned cuvette",
+      "description": "Cuvette seated 8 px off the registered optical axis.",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "phosphate",
+        "concentration": 0.4,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 8,
+        "isSaturated": false,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": null,
+        "uncertainty": null,
+        "unit": "mg P/L",
+        "verdict": "REJECTED",
+        "selectedModel": "ridge",
+        "qcStatus": "FAIL",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.33,
+        "detectedShiftPx": -9,
+        "isRejected": true,
+        "rejectionReason": "LISA REFUSED TO REPORT A NUMBER: Cuvette mechanically displaced beyond registration tolerance."
+      }
+    },
+    {
+      "id": "saturated_sample",
+      "label": "Saturated sensor",
+      "description": "Exposure too long — every sample pixel clips at 255.",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "phosphate",
+        "concentration": 0.4,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": true,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": null,
+        "uncertainty": null,
+        "unit": "mg P/L",
+        "verdict": "REJECTED",
+        "selectedModel": "ridge",
+        "qcStatus": "FAIL",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.59,
+        "detectedShiftPx": -10,
+        "isRejected": true,
+        "rejectionReason": "LISA REFUSED TO REPORT A NUMBER: Sensor pixel saturation detected. Optical measurement clipped."
+      }
+    },
+    {
+      "id": "lead_sample",
+      "label": "Lead (simulated)",
+      "description": "0.50 mg Pb/L as the dithizone complex. LISA processes Lead through simulated calibration.",
+      "measurementId": "SIM-0500-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "lead",
+        "concentration": 0.5,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": false,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": 0.499,
+        "uncertainty": 0.085,
+        "unit": "mg Pb/L",
+        "verdict": "ALERT",
+        "selectedModel": "ridge",
+        "qcStatus": "PASS",
+        "oodStatus": "IN_DISTRIBUTION",
+        "oodScore": 0.09,
+        "detectedShiftPx": 0,
+        "isRejected": false,
+        "rejectionReason": null
+      }
+    },
+    {
+      "id": "unknown_dye",
+      "label": "Unknown chemistry",
+      "description": "Cuvette holds a yellow azo dye (tartrazine-like, peak 426 nm), not molybdenum blue.",
+      "measurementId": "SIM-0400-001",
+      "seed": "LISA-TWIN-1",
+      "deviceId": "device-a-reference",
+      "params": {
+        "analyte": "anomaly",
+        "concentration": 0.4,
+        "noiseLevel": 0.015,
+        "illuminationDrift": 0,
+        "shiftPx": 0,
+        "isSaturated": false,
+        "turbidityAU": 0,
+        "colorInterferenceAU": 0
+      },
+      "engineOutput": {
+        "concentration": null,
+        "uncertainty": null,
+        "unit": "mg P/L",
+        "verdict": "REJECTED",
+        "selectedModel": "ridge",
+        "qcStatus": "WARNING",
+        "oodStatus": "OUT_OF_DISTRIBUTION",
+        "oodScore": 5.94,
+        "detectedShiftPx": 2,
+        "isRejected": true,
+        "rejectionReason": "LISA REFUSED TO REPORT A NUMBER: Sample optical signature is outside the validated Orthophosphate (as P) calibration manifold. Laboratory verification required."
+      }
+    }
+  ]
+}

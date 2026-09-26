@@ -2,6 +2,13 @@
 // Detects when an unknown optical input deviates from the validated calibration manifold
 
 import { OODResult } from '../types';
+import { smoothSpectrum } from './spectrum';
+
+// Minimum RMS (AU) of the 9-point-smoothed sample spectrum for a shape comparison to
+// be meaningful. White detector noise is suppressed ~3× by the smoothing; a real
+// chromophore band is not. Below this, the sample is indistinguishable from the
+// 0 mg/L standards and its "shape" is noise, which correlates with nothing.
+const SHAPE_TEST_MIN_RMS_AU = 0.008;
 
 export interface CalibrationManifold {
   meanProfile: number[];       // Mean absorbance across 151 wavelengths
@@ -105,7 +112,11 @@ export function evaluateOOD(
     denomM += dm * dm;
   }
 
-  const shapeCorr = denomA > 1e-6 && denomM > 1e-6 ? num / Math.sqrt(denomA * denomM) : 1.0;
+  const smoothed = smoothSpectrum(absorbances.slice(0, p), 9);
+  const smoothMean = smoothed.reduce((a, b) => a + b, 0) / p;
+  const structuredRms = Math.sqrt(smoothed.reduce((a, v) => a + (v - smoothMean) ** 2, 0) / p);
+  const shapeCorr =
+    structuredRms > SHAPE_TEST_MIN_RMS_AU && denomA > 1e-6 && denomM > 1e-6 ? num / Math.sqrt(denomA * denomM) : 1.0;
 
   // If shape correlation deviates strongly from target chromophore manifold (r < 0.70)
   const shapePenalty = shapeCorr < 0.70 ? Math.max(0, (0.75 - shapeCorr) * 4.5) : 0;

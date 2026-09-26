@@ -187,6 +187,9 @@ export interface PipelineExecutionResult {
   ood: OODResult;
   beerMetrics: ModelMetrics;
   ridgeMetrics: ModelMetrics;
+  /** Both model estimates before selection (absent when the analyte was refused). */
+  beerConcentration?: number;
+  ridgeConcentration?: number;
   executionTimeMs: number;
 }
 
@@ -514,6 +517,8 @@ export function executeLISAPipeline(options: PipelineExecutionOptions): Pipeline
     ood,
     beerMetrics: beerPrediction.metrics,
     ridgeMetrics,
+    beerConcentration: beerPrediction.concentration,
+    ridgeConcentration,
     executionTimeMs,
   };
 }

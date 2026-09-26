@@ -5,10 +5,8 @@
 // optical geometry taken from the build plan (1000 lines/mm grating, 33° wedge).
 // There is no second scientific engine: the 3D layer only visualises these values.
 
-import { simulateSpectrum, SimulationParams, getWhiteLEDBaseProfile } from '../engine/simulator';
-import { executeLISAPipeline, PipelineExecutionResult } from '../engine/orchestrator';
-import { SeededPRNG } from '../engine/prng';
-import { DEMO_DEVICES } from '../engine/deviceCalibration';
+import { SimulationParams, getWhiteLEDBaseProfile } from '../engine/simulator';
+import { runSimulation, SimulationState } from '../simulation/state';
 import { STANDARD_WAVELENGTHS, wavelengthToRGB } from '../engine/spectrum';
 import { fitWavelengthCalibration, CFL_REFERENCE_LINES } from '../engine/wavelength';
 
@@ -234,14 +232,8 @@ export const applyFaults = (params: SimulationParams, faults: FaultId[]) =>
 // One measurement = one seeded simulation pushed through the production pipeline.
 // ---------------------------------------------------------------------------
 
-export interface TwinMeasurement {
-  id: string;
-  seed: string;
-  params: SimulationParams;
-  deviceId: string;
-  sim: ReturnType<typeof simulateSpectrum>;
-  result: PipelineExecutionResult;
-}
+/** The twin's measurement is the shared simulation state (src/simulation/state.ts). */
+export type TwinMeasurement = SimulationState;
 
 export const measurementId = (concentration: number, run: number) =>
   `SIM-${String(Math.round(concentration * 1000)).padStart(4, '0')}-${String(run).padStart(3, '0')}`;
@@ -249,28 +241,19 @@ export const measurementId = (concentration: number, run: number) =>
 export function runTwinMeasurement(
   params: SimulationParams,
   deviceId: string,
-  run: number
+  run: number,
+  /** Measurement opened from the lab / a hero scenario: run 1 reproduces it exactly. */
+  origin?: { seed: string; id?: string }
 ): TwinMeasurement {
-  const id = measurementId(params.concentration, run);
   // Seed depends on the run only, so moving a slider changes the chemistry,
   // not the noise realisation — comparisons stay apples to apples.
-  const seed = `LISA-TWIN-${run}`;
-  const device = DEMO_DEVICES.find((d) => d.id === deviceId) ?? DEMO_DEVICES[0];
-  const sim = simulateSpectrum({ ...params, deviceProfileId: device.id }, new SeededPRNG(seed));
-  // Lead is declared as lead (and processed via simulated Lead calibration). An unknown dye is
-  // run as the operator would: as a phosphate test, which OOD has to catch.
-  const analyteId = chemistryOf(params.analyte).analyteId;
-  const result = executeLISAPipeline({
-    sampleName: id,
-    sourceMode: 'SIMULATED',
-    analyteId,
-    deviceId: device.id,
-    deviceFingerprint: device.fingerprint,
-    deviceProfile: device,
-    rawSampleIntensities: sim.sampleIntensities,
-    rawBlankIntensities: sim.blankIntensities,
-    groundTruth: params.analyte === analyteId ? params.concentration : undefined,
-    notes: 'Digital twin — simulated measurement, not an experimental result.',
+  // Lead is declared as lead; an unknown dye is run as the operator would —
+  // as a phosphate test, which OOD has to catch (see declaredAnalyteOf).
+  return runSimulation({
+    ...params,
+    seed: origin ? (run === 1 ? origin.seed : `${origin.seed}-R${run}`) : `LISA-TWIN-${run}`,
+    deviceId,
+    declaredAnalyteId: chemistryOf(params.analyte).analyteId,
+    id: origin && run === 1 ? (origin.id ?? `SIM-${origin.seed}`) : measurementId(params.concentration, run),
   });
-  return { id, seed, params, deviceId: device.id, sim, result };
 }

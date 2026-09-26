@@ -3,6 +3,45 @@
 
 import { STANDARD_WAVELENGTHS } from './spectrum';
 import { SeededPRNG, defaultPRNG } from './prng';
+import { DEMO_DEVICES } from './deviceCalibration';
+
+// Named interferent chromophores. Each profile is unit-peak absorbance (1 AU at its
+// maximum); `peakAU` scales it. Shapes are literature-typical band positions,
+// approximated as Gaussians — they are simulated spectra, not measured ones.
+export type InterferentKind = 'tartrazine' | 'chlorophyll' | 'red_dye' | 'humic';
+
+export const INTERFERENTS: Record<InterferentKind, { label: string; note: string; profile: (nm: number) => number }> = {
+  tartrazine: {
+    label: 'Tartrazine-like yellow dye',
+    note: 'Azo dye, λmax ≈ 426 nm. No absorbance in the phosphate band.',
+    profile: (nm) => Math.exp(-Math.pow((nm - 426) / 28, 2)) + 0.07 * Math.exp(-Math.pow((nm - 500) / 20, 2)),
+  },
+  chlorophyll: {
+    label: 'Chlorophyll-like pigment',
+    note: 'Soret band ≈ 430 nm plus a Q band ≈ 663 nm that overlaps the phosphate band.',
+    profile: (nm) => Math.exp(-Math.pow((nm - 432) / 18, 2)) + 0.62 * Math.exp(-Math.pow((nm - 663) / 11, 2)),
+  },
+  red_dye: {
+    label: 'Generic red dye',
+    note: 'Allura-red-like, λmax ≈ 504 nm — close to the lead band.',
+    profile: (nm) => Math.exp(-Math.pow((nm - 504) / 38, 2)),
+  },
+  humic: {
+    label: 'Broad organic (humic) colour',
+    note: 'Featureless absorbance rising toward the blue, ∝ λ^-2.5.',
+    profile: (nm) => Math.pow(450 / nm, 2.5),
+  },
+};
+
+// Simulated colour-development kinetics: fraction developed f(t) = 1 − exp(−k·t).
+// Rate constants are illustrative (chosen so phosphate is ~95 % developed at the
+// 10-minute read time of EPA 365.3); they are not fitted to measured kinetics.
+export const REACTION_RATE_PER_MIN: Record<string, number> = { phosphate: 0.3, lead: 1.2, iron: 0.6 };
+
+export const reactionProgress = (analyte: string, reactionTimeMin?: number) =>
+  reactionTimeMin === undefined || !(analyte in REACTION_RATE_PER_MIN)
+    ? 1
+    : 1 - Math.exp(-REACTION_RATE_PER_MIN[analyte] * Math.max(0, reactionTimeMin));
 
 export interface SimulationParams {
   analyte: 'phosphate' | 'iron' | 'lead' | 'anomaly';
@@ -14,6 +53,13 @@ export interface SimulationParams {
   turbidityAU: number;            // 0.0 to 0.8 AU
   colorInterferenceAU: number;    // 0.0 to 0.6 AU
   deviceProfileId?: string;       // device A, B, C, D
+  // --- Physical extensions (all optional; defaults reproduce the legacy output bit-for-bit) ---
+  pathLengthCm?: number;          // cuvette path length l (default 1.0 cm)
+  reactionTimeMin?: number;       // minutes since reagent addition; undefined = end-point
+  exposure?: number;              // relative exposure × gain (default 1.0; LED peak ≈ 235/255)
+  ambientLightCounts?: number;    // stray/ambient light reaching the sensor in both captures (8-bit counts)
+  sourceDrift?: number;           // LED output change between blank and sample capture (fraction)
+  interferents?: { kind: InterferentKind; peakAU: number }[];
 }
 
 // Normalized High-CRI White LED emission spectrum (400-700 nm)
@@ -85,6 +131,9 @@ export function simulateSpectrum(
   blankIntensities: number[];
   sampleIntensities: number[];
   trueAbsorbance: number[];
+  /** True absorbance split by physical cause (AU, at the simulated path length). */
+  components: { analyte: number[]; interferent: number[]; scatter: number[] };
+  reactionProgress: number;
 } {
   const params: SimulationParams = {
     analyte: rawParams.analyte || 'phosphate',
@@ -101,13 +150,22 @@ export function simulateSpectrum(
   const baseLED = getWhiteLEDBaseProfile(wavelengths);
   const extinction = getMolarExtinctionProfile(params.analyte, wavelengths);
   const n = wavelengths.length;
+  const exposure = rawParams.exposure ?? 1.0;
+  const ambient = rawParams.ambientLightCounts ?? 0;
+  const sourceDrift = 1.0 + (rawParams.sourceDrift ?? 0);
+  const progress = reactionProgress(params.analyte, rawParams.reactionTimeMin);
+  const interferents = rawParams.interferents ?? [];
+  // Handset response comes from the same DeviceProfile the pipeline normalises with,
+  // so device calibration inverts exactly what the simulator applied.
+  const device = DEMO_DEVICES.find((d) => d.id === params.deviceProfileId);
 
   const blankIntensities: number[] = new Array(n).fill(0);
   const sampleIntensities: number[] = new Array(n).fill(0);
   const trueAbsorbance: number[] = new Array(n).fill(0);
+  const components = { analyte: new Array(n).fill(0), interferent: new Array(n).fill(0), scatter: new Array(n).fill(0) };
 
-  // Optical path length = 1.0 cm
-  const pathLengthCm = 1.0;
+  // Optical path length (Beer–Lambert l), default 1.0 cm
+  const pathLengthCm = rawParams.pathLengthCm ?? 1.0;
 
   // Multiplicative illumination drift factor
   const driftFactor = 1.0 + params.illuminationDrift;
@@ -116,42 +174,54 @@ export function simulateSpectrum(
     const nm = wavelengths[i];
 
     // Blank transmission
-    let iBlank = baseLED[i] * driftFactor;
+    const ledLight = baseLED[i] * driftFactor * exposure; // photons from the LED, before the sensor clips
+    let iBlank = ledLight + ambient;
     // Add small sensor noise to blank
     iBlank += prng.gaussian(0, params.noiseLevel * 4);
-    iBlank = Math.max(10, Math.min(255, iBlank));
+    iBlank = Math.max(10 * Math.min(1, exposure), Math.min(255, iBlank));
     blankIntensities[i] = iBlank;
 
-    // Analyte absorbance A = epsilon * l * c
-    let abs = extinction[i] * pathLengthCm * params.concentration;
+    // Analyte absorbance A = epsilon * l * c, scaled by how far the colour has developed
+    let abs = extinction[i] * pathLengthCm * params.concentration * progress;
+    components.analyte[i] = abs;
+
+    // Interferent chromophores in the same cuvette (also ∝ path length)
+    for (const it of interferents) {
+      const a = INTERFERENTS[it.kind].profile(nm) * it.peakAU * pathLengthCm;
+      abs += a;
+      components.interferent[i] += a;
+    }
 
     // Turbidity (Mie scattering: ~ lambda^-1)
     if (params.turbidityAU > 0) {
       const mieScale = 550 / nm;
       abs += params.turbidityAU * mieScale;
+      components.scatter[i] = params.turbidityAU * mieScale;
     }
 
     // Organic color background (e.g. humic acid yellowing: ~ lambda^-3)
     if (params.colorInterferenceAU > 0) {
       const colorScale = Math.pow(450 / nm, 2.5);
       abs += params.colorInterferenceAU * colorScale;
+      components.interferent[i] += params.colorInterferenceAU * colorScale;
     }
 
     trueAbsorbance[i] = Math.max(0, abs);
 
-    // Sample transmission: I_sample = I_blank * 10^(-A)
-    let iSample = iBlank * Math.pow(10, -abs);
+    // Sample transmission: I_sample = I_blank * 10^(-A). Only the LED light is attenuated;
+    // ambient stray light reaches the sensor unattenuated (classic stray-light error).
+    // Legacy path (no ambient, drift or exposure change) keeps the exact original arithmetic.
+    let iSample =
+      ambient === 0 && sourceDrift === 1 && exposure === 1
+        ? iBlank * Math.pow(10, -abs)
+        : ledLight * sourceDrift * Math.pow(10, -abs) + ambient;
 
-    // Apply device-specific color temperature bias if specified
-    if (params.deviceProfileId === 'device-b-warm') {
-      // Warm sensor: boosts red (>600nm) by +8%, dampens blue (<480nm) by -6%
-      const warmFactor = 1.0 + (nm - 550) * 0.0006;
-      iSample *= warmFactor;
-    } else if (params.deviceProfileId === 'device-c-cool') {
-      // Cool sensor: boosts blue (<480nm) by +7%, dampens red by -5%
-      const coolFactor = 1.0 - (nm - 550) * 0.0005;
-      iSample *= coolFactor;
-    } else if (params.deviceProfileId === 'device-d-budget') {
+    // Handset spectral sensitivity. Assumption: the blank I₀ is the reference-handset
+    // blank stored with the calibration, so a different phone's response does not cancel.
+    if (device && params.deviceProfileId !== 'device-a-reference') {
+      iSample *= device.spectralSensitivity[i] ?? 1;
+    }
+    if (params.deviceProfileId === 'device-d-budget') {
       // Budget sensor: higher noise + slight nonlinearity
       iSample += prng.gaussian(0, 4.5);
     }
@@ -170,11 +240,12 @@ export function simulateSpectrum(
     sampleIntensities[i] = iSample;
   }
 
-  // Apply mechanical shift if params.shiftPx !== 0
-  if (params.shiftPx !== 0) {
+  // Apply mechanical shift (+ the handset's own wavelength-registration offset). 1 px = one 2 nm bin.
+  const totalShift = params.shiftPx + (device && device.id !== 'device-a-reference' ? device.wavelengthOffsetPx : 0);
+  if (totalShift !== 0) {
     const shifted: number[] = new Array(n).fill(0);
     for (let i = 0; i < n; i++) {
-      const srcIdx = i + params.shiftPx;
+      const srcIdx = i + totalShift;
       if (srcIdx >= 0 && srcIdx < n) {
         shifted[i] = sampleIntensities[srcIdx];
       } else if (srcIdx < 0) {
@@ -193,5 +264,7 @@ export function simulateSpectrum(
     blankIntensities,
     sampleIntensities,
     trueAbsorbance,
+    components,
+    reactionProgress: progress,
   };
 }

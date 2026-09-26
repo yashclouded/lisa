@@ -32,7 +32,16 @@ import {
   GRATING_LINES_PER_MM,
   WEDGE_ANGLE_RAD,
 } from './twinModel';
+import { heroById } from '../simulation/scenarios';
+import type { SimulationConfig } from '../simulation/state';
 import './digitalTwin.css';
+
+// Deterministic, recordable entry points: #/twin?scene=result&cinema=1, #/twin?hero=HERO_TURBID
+const CINEMA_SCENES = {
+  device: 0, explode: 1, led: 2, cuvette: 3, slit: 4, grating: 5, camera: 6,
+  optics: 7, dispersion: 8, sensor: 9, spectrum: 10, compute: 11, result: 12, unknown: 13, rejection: 14,
+} as const;
+const query = () => new URLSearchParams(window.location.hash.split('?')[1] ?? '');
 
 const CHEM_NAME = { phosphate: 'Molybdenum blue', lead: 'Pb–dithizone', anomaly: 'Unknown dye', iron: 'Fe–phenanthroline' } as const;
 
@@ -159,9 +168,26 @@ const SensorStrip: React.FC<{ intensities: number[] }> = ({ intensities }) => {
 
 const DigitalTwin: React.FC = () => {
   // Simulation inputs
-  const [base, setBase] = useState<SimulationParams>(SCENARIOS[0].params);
-  const [deviceId, setDeviceId] = useState(SCENARIOS[0].deviceId);
-  const [scenarioId, setScenarioId] = useState<string | null>(SCENARIOS[0].id);
+  const [q] = useState(query);
+  // A hero scenario or a lab config opens the *same* measurement (same seed) in 3D.
+  const [origin] = useState<SimulationConfig | null>(() => {
+    const hero = heroById(q.get('hero') ?? '');
+    if (hero) return hero.config;
+    try {
+      return q.get('cfg') ? (JSON.parse(q.get('cfg')!) as SimulationConfig) : null;
+    } catch {
+      return null;
+    }
+  });
+  const hero = heroById(origin?.id ?? '');
+  const [base, setBase] = useState<SimulationParams>(() => {
+    if (!origin) return SCENARIOS[0].params;
+    const { seed: _s, deviceId: _d, id: _i, declaredAnalyteId: _a, ...p } = origin;
+    return p;
+  });
+  const [deviceId, setDeviceId] = useState(origin?.deviceId ?? SCENARIOS[0].deviceId);
+  const [scenarioId, setScenarioId] = useState<string | null>(origin ? null : SCENARIOS[0].id);
+  const cinema = q.get('cinema') === '1';
   const [faults, setFaults] = useState<FaultId[]>([]);
   const [run, setRun] = useState(1);
   const [stage, setStage] = useState<number | null>(null);
@@ -175,7 +201,7 @@ const DigitalTwin: React.FC = () => {
   const [jury, setJury] = useState<{ step: number; paused: boolean } | null>(null);
 
   const params = useMemo(() => applyFaults(base, faults), [base, faults]);
-  const m = useMemo(() => runTwinMeasurement(params, deviceId, run), [params, deviceId, run]);
+  const m = useMemo(() => runTwinMeasurement(params, deviceId, run, origin ?? undefined), [params, deviceId, run, origin]);
   const r = m.result;
   const busy = stage !== null && stage < 8;
 
@@ -219,7 +245,7 @@ const DigitalTwin: React.FC = () => {
           ? { id: m.id, headline: 'No result', sub: 'Measurement rejected', tone: 'alert' }
           : {
               id: m.id,
-              headline: `${fmt(rec.concentration)} mg P/L`,
+              headline: `${fmt(rec.concentration)} ${rec.unit}`,
               sub: `± ${fmt(rec.uncertainty)} · QC ${QC_WORD[r.qc.overallStatus]}`,
               tone: VERDICT_TONE[rec.verdict] === 'alert' ? 'alert' : 'pass',
             }
@@ -336,6 +362,24 @@ const DigitalTwin: React.FC = () => {
     return () => window.clearTimeout(t);
   }, [jury]);
 
+  // Scene URL: replay the jury steps up to the requested one so the state is
+  // exactly what the story would have produced, then hold there (paused).
+  // Guarded so StrictMode's double effect run cannot advance the seed twice.
+  const sceneEntered = useRef(false);
+  useEffect(() => {
+    if (sceneEntered.current) return;
+    sceneEntered.current = true;
+    const scene = q.get('scene') as keyof typeof CINEMA_SCENES | null;
+    const autoplay = q.get('autoplay') === '1';
+    if (scene && scene in CINEMA_SCENES) {
+      const n = CINEMA_SCENES[scene];
+      for (let i = 0; i < n; i++) juryEnter(i);
+      setStage(null);
+      setJury({ step: n, paused: !autoplay });
+    } else if (autoplay) setJury({ step: 0, paused: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!jury) return;
     const onKey = (e: KeyboardEvent) => {
@@ -370,7 +414,7 @@ const DigitalTwin: React.FC = () => {
   const absMax = Math.max(refused ? 0.2 : 1.0, ...absDisplay) * 1.1;
 
   return (
-    <div className="twin">
+    <div className={`twin${cinema ? ' twin--cinema' : ''}`}>
       <header className="twin-bar">
         <a className="btn btn--ghost btn--sm" href="#/">
           <ArrowLeft size={15} aria-hidden="true" /> Instrument
@@ -380,7 +424,11 @@ const DigitalTwin: React.FC = () => {
           <span className="twin-bar__name">Digital twin</span>
           <StatusPill tone="caution">Simulated</StatusPill>
         </div>
+        {origin && <span className="card__sub">{hero ? hero.label : 'From simulation lab'} · seed {m.seed}</span>}
         <div className="twin-bar__spacer" />
+        <a className="btn btn--ghost btn--sm" href="#/lab">
+          Simulation lab
+        </a>
         <button
           type="button"
           className="btn btn--primary btn--sm"

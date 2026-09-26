@@ -15,6 +15,7 @@ import {
   VolumeX,
   History as HistoryIcon,
   Box,
+  FlaskConical,
   FolderOpen,
 } from 'lucide-react';
 import { AnalyteDefinition } from '../types';
@@ -155,6 +156,10 @@ export const Header: React.FC<HeaderProps> = ({
             <Box className="btn__icon" size={15} aria-hidden="true" />
             <span>Digital twin</span>
             <span className="btn__tag">3D</span>
+          </a>
+          <a className="btn btn--secondary" href="#/lab">
+            <FlaskConical className="btn__icon" size={15} aria-hidden="true" />
+            <span>Simulation lab</span>
           </a>
 
           {onOpenSampleLibrary && (

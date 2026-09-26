@@ -669,3 +669,11 @@
     justify-content: flex-end;
   }
 }
+
+/* Cinema mode (#/twin?cinema=1): recording layout — no developer controls, no hover-only UI. */
+.twin--cinema .twin-side > section:not(.twin-result),
+.twin--cinema .twin-stage__top,
+.twin--cinema .twin-stage__bottom,
+.twin--cinema .twin-bar .btn {
+  display: none;
+}

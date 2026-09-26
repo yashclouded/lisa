@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "tsx scripts/run-all-tests.ts",
+    "test": "tsx scripts/run-all-tests.ts && tsx scripts/test-simulation.ts",
     "test:lisa": "tsx scripts/test-lisa-samples.ts",
     "validate:lisa": "tsx scripts/test-lisa-samples.ts",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:twin": "tsx scripts/verify-digital-twin.ts"
+    "test:twin": "tsx scripts/verify-digital-twin.ts",
+    "test:sim": "tsx scripts/test-simulation.ts"
   },
   "dependencies": {
     "lucide-react": "^1.48.0",
